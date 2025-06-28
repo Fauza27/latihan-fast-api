@@ -33,4 +33,8 @@ COPY ./iris_model.joblib .
 # Perhatikan --host 0.0.0.0. Ini SANGAT PENTING.
 # Ini memberitahu Uvicorn untuk mendengarkan koneksi dari luar container.
 # Jika Anda menggunakan 127.0.0.1, Anda tidak akan bisa mengaksesnya dari luar.
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+#CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+
+EXPOSE 8080
+
+CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT
