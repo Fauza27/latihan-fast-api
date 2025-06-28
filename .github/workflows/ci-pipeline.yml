@@ -1,0 +1,45 @@
+# .github/workflows/ci-pipeline.yml
+
+# Nama workflow yang akan muncul di tab "Actions" GitHub
+name: FastAPI CI Pipeline
+
+# Pemicu (trigger): Kapan workflow ini harus dijalankan
+on:
+  push:
+    branches: ["main"] # Jalankan saat ada push ke branch 'main'
+  pull_request:
+    branches: ["main"] # Jalankan juga saat ada pull request ke 'main'
+
+# Pekerjaan (jobs) yang akan dilakukan
+jobs:
+  # Kita definisikan satu pekerjaan bernama 'build-and-test'
+  build-and-test:
+    # Lingkungan virtual tempat job ini akan berjalan
+    # Kita akan menggunakan server Ubuntu versi terbaru yang disediakan GitHub
+    runs-on: ubuntu-latest
+
+    # Langkah-langkah (steps) yang akan dieksekusi secara berurutan
+    steps:
+      # Langkah 1: Checkout kode dari repositori
+      # 'uses' berarti kita menggunakan Aksi yang sudah dibuat orang lain
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Langkah 2: Menyiapkan lingkungan Python
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9" # Tentukan versi Python yang kita inginkan
+
+      # Langkah 3: Menginstal dependensi
+      # 'run' berarti kita menjalankan perintah shell
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest # Pastikan pytest juga diinstal di lingkungan CI
+
+      # Langkah 4: Menjalankan tes dengan Pytest
+      - name: Run tests with Pytest
+        run: |
+          pytest
